@@ -1,0 +1,431 @@
+// ════════════════════════════════════════════════════════════
+//  MX Language — Mini Projects
+//  Run with: python mx.py examples/projects.mx
+// ════════════════════════════════════════════════════════════
+
+
+// ══════════════════════════════════════════════
+//  PROJECT 1: Number Guessing Game (auto-play)
+// ══════════════════════════════════════════════
+
+print("╔══════════════════════════════╗")
+print("║   Number Guessing Game       ║")
+print("╚══════════════════════════════╝")
+
+fn guessing_game_simulate(secret: int, guesses) {
+    print("Secret number:", secret)
+    let attempts = 0
+    for guess in guesses {
+        attempts += 1
+        if guess == secret {
+            print("Guess", guess, "→ CORRECT! Found in", attempts, "attempts.")
+            return attempts
+        } else if guess < secret {
+            print("Guess", guess, "→ Too low!")
+        } else {
+            print("Guess", guess, "→ Too high!")
+        }
+    }
+    print("Game over! Secret was:", secret)
+    return -1
+}
+
+let game_guesses = [50, 75, 62, 56, 58, 60, 61]
+guessing_game_simulate(61, game_guesses)
+print("")
+
+
+// ══════════════════════════════════════════════
+//  PROJECT 2: Student Grade System
+// ══════════════════════════════════════════════
+
+print("╔══════════════════════════════╗")
+print("║   Student Grade System       ║")
+print("╚══════════════════════════════╝")
+
+struct Student {
+    name: str
+    math: int
+    science: int
+    english: int
+}
+
+fn average(s) -> float {
+    return (s.math + s.science + s.english) / 3.0
+}
+
+fn letter_grade(avg: float) -> str {
+    if avg >= 90 { return "A+" }
+    if avg >= 80 { return "A"  }
+    if avg >= 70 { return "B"  }
+    if avg >= 60 { return "C"  }
+    return "F"
+}
+
+fn print_report(s) {
+    let avg = average(s)
+    print("Student:", s.name)
+    print("  Math:", s.math, "| Science:", s.science, "| English:", s.english)
+    print("  Average:", round(avg, 1), "| Grade:", letter_grade(avg))
+}
+
+let students = [
+    new Student { name: "Manish",  math: 95, science: 88, english: 91 },
+    new Student { name: "Alice",   math: 72, science: 85, english: 78 },
+    new Student { name: "Bob",     math: 60, science: 65, english: 55 },
+    new Student { name: "Priya",   math: 98, science: 97, english: 95 },
+]
+
+for s in students {
+    print_report(s)
+    print("")
+}
+
+fn top_student(list) {
+    let best = list[0]
+    let i = 1
+    while i < len(list) {
+        if average(list[i]) > average(best) {
+            best = list[i]
+        }
+        i += 1
+    }
+    return best
+}
+
+let top = top_student(students)
+print("🏆 Top Student:", top.name, "with avg:", round(average(top), 1))
+print("")
+
+
+// ══════════════════════════════════════════════
+//  PROJECT 3: Scientific Calculator
+// ══════════════════════════════════════════════
+
+print("╔══════════════════════════════╗")
+print("║   Scientific Calculator      ║")
+print("╚══════════════════════════════╝")
+
+import math
+
+fn calc(op: str, a: float, b: float) -> float {
+    if op == "+"   { return a + b }
+    if op == "-"   { return a - b }
+    if op == "*"   { return a * b }
+    if op == "/"   {
+        if b == 0.0 { print("Error: division by zero"); return 0.0 }
+        return a / b
+    }
+    if op == "**"  { return pow(a, b) }
+    print("Unknown op:", op)
+    return 0.0
+}
+
+fn calc_unary(op: str, a: float) -> float {
+    if op == "sqrt" { return sqrt(a) }
+    if op == "sin"  { return sin(a) }
+    if op == "cos"  { return cos(a) }
+    if op == "log"  { return log(a) }
+    if op == "abs"  { return abs(a) }
+    print("Unknown op:", op)
+    return a
+}
+
+let ops   = ["+",  "-",  "*",   "/",   "**"]
+let pairs = [[10.0, 3.0], [15.0, 4.0], [7.0, 8.0], [22.0, 7.0], [2.0, 10.0]]
+
+let i = 0
+while i < len(ops) {
+    let a = pairs[i][0]
+    let b = pairs[i][1]
+    let op = ops[i]
+    let res = calc(op, a, b)
+    print(a, op, b, "=", round(res, 4))
+    i += 1
+}
+print("")
+
+let unary_ops  = ["sqrt", "sin",  "cos", "log", "abs"]
+let unary_vals = [16.0,    PI,    0.0,   E,    -42.0]
+let j = 0
+while j < len(unary_ops) {
+    let res = calc_unary(unary_ops[j], unary_vals[j])
+    print(unary_ops[j] + "(" + str(round(unary_vals[j], 4)) + ") =", round(res, 6))
+    j += 1
+}
+print("")
+
+
+// ══════════════════════════════════════════════
+//  PROJECT 4: Matrix Operations (2D arrays)
+// ══════════════════════════════════════════════
+
+print("╔══════════════════════════════╗")
+print("║   Matrix Operations          ║")
+print("╚══════════════════════════════╝")
+
+fn print_matrix(m) {
+    for row in m {
+        let parts = []
+        for val in row {
+            let s = str(val)
+            while len(s) < 4 { s = " " + s }
+            push(parts, s)
+        }
+        print(parts.join(""))
+    }
+}
+
+fn matrix_add(a, b) {
+    let result = []
+    let r = 0
+    while r < len(a) {
+        let row = []
+        let c = 0
+        while c < len(a[r]) {
+            push(row, a[r][c] + b[r][c])
+            c += 1
+        }
+        push(result, row)
+        r += 1
+    }
+    return result
+}
+
+fn matrix_mul(a, b) {
+    let ra = len(a)
+    let ca = len(a[0])
+    let cb = len(b[0])
+    let result = []
+    let r = 0
+    while r < ra {
+        let row = []
+        let c = 0
+        while c < cb {
+            let sum = 0
+            let k = 0
+            while k < ca {
+                sum += a[r][k] * b[k][c]
+                k += 1
+            }
+            push(row, sum)
+            c += 1
+        }
+        push(result, row)
+        r += 1
+    }
+    return result
+}
+
+fn identity(n: int) {
+    let m = []
+    let i = 0
+    while i < n {
+        let row = []
+        let j = 0
+        while j < n {
+            if i == j { push(row, 1) } else { push(row, 0) }
+            j += 1
+        }
+        push(m, row)
+        i += 1
+    }
+    return m
+}
+
+let A = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
+let B = [[9, 8, 7], [6, 5, 4], [3, 2, 1]]
+let I = identity(3)
+
+print("Matrix A:")
+print_matrix(A)
+print("Matrix B:")
+print_matrix(B)
+print("A + B:")
+print_matrix(matrix_add(A, B))
+print("A x B:")
+print_matrix(matrix_mul(A, B))
+print("Identity 3x3:")
+print_matrix(I)
+print("A x I (should equal A):")
+print_matrix(matrix_mul(A, I))
+print("")
+
+
+// ══════════════════════════════════════════════
+//  PROJECT 5: Word Frequency Counter
+// ══════════════════════════════════════════════
+
+print("╔══════════════════════════════╗")
+print("║   Word Frequency Counter     ║")
+print("╚══════════════════════════════╝")
+
+fn to_lower(ch: str) -> str {
+    let up = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    let lo = "abcdefghijklmnopqrstuvwxyz"
+    let i = 0
+    while i < 26 {
+        if up[i] == ch { return lo[i] }
+        i += 1
+    }
+    return ch
+}
+
+fn is_letter(ch: str) -> bool {
+    let alpha = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    let i = 0
+    while i < len(alpha) {
+        if alpha[i] == ch { return true }
+        i += 1
+    }
+    return false
+}
+
+fn tokenize(text: str) {
+    let words = []
+    let current = []
+    let i = 0
+    while i < len(text) {
+        let ch = text[i]
+        if is_letter(ch) {
+            push(current, to_lower(ch))
+        } else {
+            if len(current) > 0 {
+                push(words, current.join(""))
+                current = []
+            }
+        }
+        i += 1
+    }
+    if len(current) > 0 { push(words, current.join("")) }
+    return words
+}
+
+fn freq_count(words) {
+    let unique = []
+    let counts = []
+    for word in words {
+        let found = false
+        let i = 0
+        while i < len(unique) {
+            if unique[i] == word {
+                counts[i] = counts[i] + 1
+                found = true
+                break
+            }
+            i += 1
+        }
+        if not found {
+            push(unique, word)
+            push(counts, 1)
+        }
+    }
+    return [unique, counts]
+}
+
+let text = "the quick brown fox jumps over the lazy dog the fox"
+let words = tokenize(text)
+let result = freq_count(words)
+let uniq = result[0]
+let cnts = result[1]
+
+print("Text:", "\"" + text + "\"")
+print("Word frequencies:")
+let k = 0
+while k < len(uniq) {
+    print("  " + uniq[k] + " : " + str(cnts[k]))
+    k += 1
+}
+print("")
+
+
+// ══════════════════════════════════════════════
+//  PROJECT 6: Sorting Algorithms
+// ══════════════════════════════════════════════
+
+print("╔══════════════════════════════╗")
+print("║   Sorting Algorithms         ║")
+print("╚══════════════════════════════╝")
+
+fn copy_array(arr) {
+    let result = []
+    for item in arr { push(result, item) }
+    return result
+}
+
+fn selection_sort(arr) {
+    let n = len(arr)
+    let i = 0
+    while i < n {
+        let min_idx = i
+        let j = i + 1
+        while j < n {
+            if arr[j] < arr[min_idx] { min_idx = j }
+            j += 1
+        }
+        let tmp = arr[i]
+        arr[i] = arr[min_idx]
+        arr[min_idx] = tmp
+        i += 1
+    }
+}
+
+fn insertion_sort(arr) {
+    let n = len(arr)
+    let i = 1
+    while i < n {
+        let key = arr[i]
+        let j = i - 1
+        while j >= 0 and arr[j] > key {
+            arr[j + 1] = arr[j]
+            j -= 1
+        }
+        arr[j + 1] = key
+        i += 1
+    }
+}
+
+fn merge(arr, l: int, m: int, r: int) {
+    let left  = []
+    let right = []
+    let i = l
+    while i <= m { push(left,  arr[i]); i += 1 }
+    let j = m + 1
+    while j <= r { push(right, arr[j]); j += 1 }
+    i = 0; j = 0
+    let kk = l
+    while i < len(left) and j < len(right) {
+        if left[i] <= right[j] { arr[kk] = left[i];  i += 1 }
+        else                    { arr[kk] = right[j]; j += 1 }
+        kk += 1
+    }
+    while i < len(left)  { arr[kk] = left[i];  i += 1; kk += 1 }
+    while j < len(right) { arr[kk] = right[j]; j += 1; kk += 1 }
+}
+
+fn merge_sort(arr, l: int, r: int) {
+    if l < r {
+        let mid = (l + r) / 2
+        merge_sort(arr, l, mid)
+        merge_sort(arr, mid + 1, r)
+        merge(arr, l, mid, r)
+    }
+}
+
+let original = [64, 25, 12, 22, 11, 90, 43, 7, 55, 31]
+print("Original:  ", original)
+
+let a1 = copy_array(original)
+selection_sort(a1)
+print("Selection: ", a1)
+
+let a2 = copy_array(original)
+insertion_sort(a2)
+print("Insertion: ", a2)
+
+let a3 = copy_array(original)
+merge_sort(a3, 0, len(a3) - 1)
+print("Merge Sort:", a3)
+
+print("")
+print("=== All projects completed! ===")

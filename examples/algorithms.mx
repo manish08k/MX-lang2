@@ -1,0 +1,201 @@
+// ════════════════════════════════════════════════════════════
+//  MX Language — Algorithms & Data Structures
+//  Run with: python mx.py examples/algorithms.mx
+// ════════════════════════════════════════════════════════════
+
+import math
+
+// ── Binary Search ─────────────────────────────────────────────
+
+fn binary_search(arr, target: int) -> int {
+    let lo = 0
+    let hi = len(arr) - 1
+    while lo <= hi {
+        let mid = (lo + hi) / 2
+        if arr[mid] == target { return mid }
+        else if arr[mid] < target { lo = mid + 1 }
+        else { hi = mid - 1 }
+    }
+    return -1
+}
+
+print("=== Binary Search ===")
+let sorted_arr = [2, 5, 8, 12, 16, 23, 38, 56, 72, 91]
+print("Array:", sorted_arr)
+print("Search 23 → index:", binary_search(sorted_arr, 23))
+print("Search 50 → index:", binary_search(sorted_arr, 50))
+print("")
+
+
+// ── GCD & LCM ─────────────────────────────────────────────────
+
+fn gcd(a: int, b: int) -> int {
+    while b != 0 {
+        let temp = b
+        b = a % b
+        a = temp
+    }
+    return a
+}
+
+fn lcm(a: int, b: int) -> int {
+    return a / gcd(a, b) * b
+}
+
+print("=== GCD & LCM ===")
+print("gcd(48, 18) =", gcd(48, 18))
+print("lcm(12, 18) =", lcm(12, 18))
+print("")
+
+
+// ── Sieve of Eratosthenes ─────────────────────────────────────
+
+fn sieve(limit: int) {
+    let is_prime = []
+    let i = 0
+    while i <= limit {
+        push(is_prime, true)
+        i += 1
+    }
+    is_prime[0] = false
+    is_prime[1] = false
+
+    let p = 2
+    while p * p <= limit {
+        if is_prime[p] {
+            let multiple = p * p
+            while multiple <= limit {
+                is_prime[multiple] = false
+                multiple += p
+            }
+        }
+        p += 1
+    }
+
+    let primes = []
+    let n = 2
+    while n <= limit {
+        if is_prime[n] { push(primes, n) }
+        n += 1
+    }
+    return primes
+}
+
+print("=== Sieve of Eratosthenes ===")
+let primes = sieve(50)
+print("Primes up to 50:", primes)
+print("Count:", len(primes))
+print("")
+
+
+// ── Stack (using arrays) ──────────────────────────────────────
+
+print("=== Stack Data Structure ===")
+
+struct Stack {
+    data: int   // placeholder, we use a separate array
+}
+
+fn make_stack() {
+    return []
+}
+
+fn stack_push(s, val) { push(s, val) }
+fn stack_pop(s)        { return pop(s) }
+fn stack_peek(s)       { return s[len(s) - 1] }
+fn stack_empty(s)      { return len(s) == 0 }
+
+let stk = make_stack()
+stack_push(stk, 10)
+stack_push(stk, 20)
+stack_push(stk, 30)
+print("Stack after pushes:", stk)
+print("Peek:", stack_peek(stk))
+print("Pop:", stack_pop(stk))
+print("Stack after pop:", stk)
+print("")
+
+
+// ── Balanced Parentheses ──────────────────────────────────────
+
+fn is_balanced(s: str) -> bool {
+    let stk = make_stack()
+    let i = 0
+    while i < len(s) {
+        let ch = s[i]
+        if ch == "(" or ch == "[" or ch == "{" {
+            stack_push(stk, ch)
+        } else if ch == ")" or ch == "]" or ch == "}" {
+            if stack_empty(stk) { return false }
+            let top = stack_pop(stk)
+            if ch == ")" and top != "(" { return false }
+            if ch == "]" and top != "[" { return false }
+            if ch == "}" and top != "{" { return false }
+        }
+        i += 1
+    }
+    return stack_empty(stk)
+}
+
+print("=== Balanced Parentheses ===")
+let tests = ["(())", "([{}])", "(()", "([)]", ""]
+for t in tests {
+    print("\"" + t + "\" →", is_balanced(t))
+}
+print("")
+
+
+// ── Caesar Cipher ─────────────────────────────────────────────
+
+fn char_code(c: str) -> int {
+    let alphabet = "abcdefghijklmnopqrstuvwxyz"
+    let i = 0
+    while i < 26 {
+        if alphabet[i] == c { return i }
+        i += 1
+    }
+    return -1
+}
+
+fn char_at(code: int) -> str {
+    let alphabet = "abcdefghijklmnopqrstuvwxyz"
+    return alphabet[code]
+}
+
+fn caesar(text: str, shift: int) -> str {
+    let result = []
+    let i = 0
+    while i < len(text) {
+        let ch = text[i]
+        let code = char_code(ch)
+        if code == -1 {
+            push(result, ch)
+        } else {
+            push(result, char_at((code + shift) % 26))
+        }
+        i += 1
+    }
+    return result.join("")
+}
+
+print("=== Caesar Cipher ===")
+let msg = "hello world"
+let encrypted = caesar(msg, 3)
+let decrypted = caesar(encrypted, 23)   // 26-3=23 to decrypt
+print("Original: ", msg)
+print("Encrypted:", encrypted)
+print("Decrypted:", decrypted)
+print("")
+
+
+// ── Math Functions via import ─────────────────────────────────
+
+print("=== Math Module ===")
+print("PI      =", round(PI, 6))
+print("sin(PI) =", round(sin(PI), 10))
+print("cos(0)  =", cos(0.0))
+print("sqrt(2) =", round(sqrt(2.0), 6))
+print("log(E)  =", log(E))
+print("")
+
+print("=== All algorithms passed! ===")

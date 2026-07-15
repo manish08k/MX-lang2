@@ -1,0 +1,250 @@
+// ════════════════════════════════════════════════════════════
+//  MX Language — Feature Showcase
+//  Run with: python mx.py examples/showcase.mx
+// ════════════════════════════════════════════════════════════
+
+
+// ── 1. Variables & Types ──────────────────────────────────────
+
+let name: str  = "MX Language"
+let version    = 1.0
+let year: int  = 2024
+const AUTHOR   = "Manish"
+
+print("=== Welcome to", name, "v" + str(version), "===")
+print("Created by:", AUTHOR)
+print("")
+
+
+// ── 2. Functions ──────────────────────────────────────────────
+
+fn greet(person: str) -> str {
+    return "Hello, " + person + "!"
+}
+
+fn add(a: int, b: int) -> int {
+    return a + b
+}
+
+fn power(base: float, exp: int = 2) -> float {
+    return base ** exp
+}
+
+fn is_prime(n: int) -> bool {
+    if n < 2 { return false }
+    let i = 2
+    while i * i <= n {
+        if n % i == 0 { return false }
+        i += 1
+    }
+    return true
+}
+
+print(greet(AUTHOR))
+print("2 + 3 =", add(2, 3))
+print("5^3  =", power(5.0, 3))
+print("Is 17 prime?", is_prime(17))
+print("Is 20 prime?", is_prime(20))
+print("")
+
+
+// ── 3. Conditionals ───────────────────────────────────────────
+
+fn grade(score: int) -> str {
+    if score >= 90 { return "A" }
+    else if score >= 80 { return "B" }
+    else if score >= 70 { return "C" }
+    else if score >= 60 { return "D" }
+    else { return "F" }
+}
+
+print("=== Grade Calculator ===")
+let scores = [95, 83, 71, 55, 100]
+for s in scores {
+    print("Score", s, "→ Grade:", grade(s))
+}
+print("")
+
+
+// ── 4. Loops & Arrays ────────────────────────────────────────
+
+print("=== Fibonacci Sequence ===")
+fn fibonacci(n: int) -> int {
+    if n <= 1 { return n }
+    let a = 0
+    let b = 1
+    let i = 2
+    while i <= n {
+        let temp = a + b
+        a = b
+        b = temp
+        i += 1
+    }
+    return b
+}
+
+let fibs = []
+for i in range(10) {
+    push(fibs, fibonacci(i))
+}
+print("First 10 Fibonacci:", fibs)
+print("")
+
+
+// ── 5. Array Operations ───────────────────────────────────────
+
+print("=== Array Operations ===")
+let nums = [5, 3, 8, 1, 9, 2, 7, 4, 6]
+print("Original:", nums)
+
+// Bubble sort
+fn bubble_sort(arr) {
+    let n = len(arr)
+    let i = 0
+    while i < n {
+        let j = 0
+        while j < n - i - 1 {
+            if arr[j] > arr[j + 1] {
+                let tmp = arr[j]
+                arr[j] = arr[j + 1]
+                arr[j + 1] = tmp
+            }
+            j += 1
+        }
+        i += 1
+    }
+}
+
+bubble_sort(nums)
+print("Sorted:  ", nums)
+print("Min:", min(nums), "  Max:", max(nums))
+print("")
+
+
+// ── 6. Structs ────────────────────────────────────────────────
+
+print("=== Structs ===")
+
+struct Point {
+    x: float
+    y: float
+}
+
+struct Circle {
+    center_x: float
+    center_y: float
+    radius: float
+}
+
+fn distance(p1, p2) -> float {
+    let dx = p1.x - p2.x
+    let dy = p1.y - p2.y
+    return sqrt(dx * dx + dy * dy)
+}
+
+fn circle_area(c) -> float {
+    return PI * c.radius * c.radius
+}
+
+let p1 = new Point { x: 0.0, y: 0.0 }
+let p2 = new Point { x: 3.0, y: 4.0 }
+let c  = new Circle { center_x: 0.0, center_y: 0.0, radius: 5.0 }
+
+print("Point 1:", p1)
+print("Point 2:", p2)
+print("Distance:", distance(p1, p2))
+print("Circle area:", round(circle_area(c), 2))
+print("")
+
+
+// ── 7. Recursion ──────────────────────────────────────────────
+
+print("=== Recursion ===")
+
+fn factorial(n: int) -> int {
+    if n <= 1 { return 1 }
+    return n * factorial(n - 1)
+}
+
+fn sum_digits(n: int) -> int {
+    if n < 10 { return n }
+    return n % 10 + sum_digits(n / 10)
+}
+
+print("10! =", factorial(10))
+print("Sum of digits of 12345 =", sum_digits(12345))
+print("")
+
+
+// ── 8. String Operations ─────────────────────────────────────
+
+print("=== String Operations ===")
+
+fn reverse_string(s: str) -> str {
+    let chars = []
+    let i = len(s) - 1
+    while i >= 0 {
+        push(chars, s[i])
+        i -= 1
+    }
+    return chars.join("")
+}
+
+fn is_palindrome(s: str) -> bool {
+    return s == reverse_string(s)
+}
+
+let words = ["racecar", "hello", "madam", "world", "level"]
+for word in words {
+    print(word, "→ palindrome?", is_palindrome(word))
+}
+print("")
+
+
+// ── 9. Higher-order Patterns ──────────────────────────────────
+
+print("=== Map / Filter (manual) ===")
+
+fn map_array(arr, transform_name: str) {
+    let result = []
+    for item in arr {
+        if transform_name == "double"  { push(result, item * 2) }
+        if transform_name == "square"  { push(result, item * item) }
+        if transform_name == "negate"  { push(result, -item) }
+    }
+    return result
+}
+
+fn filter_array(arr, filter_name: str) {
+    let result = []
+    for item in arr {
+        if filter_name == "even"     and item % 2 == 0 { push(result, item) }
+        if filter_name == "positive" and item > 0      { push(result, item) }
+        if filter_name == "gt5"      and item > 5      { push(result, item) }
+    }
+    return result
+}
+
+let base = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+print("Original:", base)
+print("Doubled: ", map_array(base, "double"))
+print("Squared: ", map_array(base, "square"))
+print("Evens:   ", filter_array(base, "even"))
+print("GT 5:    ", filter_array(base, "gt5"))
+print("")
+
+
+// ── 10. FizzBuzz ─────────────────────────────────────────────
+
+print("=== FizzBuzz (1-20) ===")
+for i in range(1, 21) {
+    if i % 15 == 0      { print("FizzBuzz") }
+    else if i % 3 == 0  { print("Fizz") }
+    else if i % 5 == 0  { print("Buzz") }
+    else                 { print(i) }
+}
+print("")
+
+
+// ── Done ──────────────────────────────────────────────────────
+print("=== All features demonstrated successfully! ===")
